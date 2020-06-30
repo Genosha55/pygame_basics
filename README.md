@@ -1,2 +1,3 @@
 # pygame_basics
-Getting into pygame, a little RPG game
+Getting into pygame, a simple RPG game;  
+Based on tutorial by TechWithTim
