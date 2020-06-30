@@ -31,7 +31,7 @@ char = pygame.image.load('images/standing.png')
 clock = pygame.time.Clock()
 score = 0
 
-# bulletSound = pygame.mixer.Sound("bullet.wav")
+bulletSound = pygame.mixer.Sound("bullet.wav")
 hitSound = pygame.mixer.Sound("hit.wav")
 disappearSound = pygame.mixer.Sound("disappear.wav")
 music = pygame.mixer.music.load("music.mp3")
@@ -165,6 +165,10 @@ class Enemy(object):
     def hit(self):
         if self.health > 0:
             self.health -= 1
+        elif self.health == 0:
+            pygame.mixer.Sound.play(disappearSound)
+            self.visible = False
+            self.health -= 1
         else:
             self.visible = False
 
@@ -208,7 +212,7 @@ while run:
     
     for bullet in bullets: # bullet movement
         if bullet.y - bullet.radius < goblin.hitbox[1] + goblin.hitbox[3] and bullet.y + bullet.radius > goblin.hitbox[1]:
-            if bullet.x + bullet.radius > goblin.hitbox[0] and bullet.x - bullet.radius < goblin.hitbox[0] + goblin.hitbox[2]:
+            if (bullet.x + bullet.radius > goblin.hitbox[0] and bullet.x - bullet.radius < goblin.hitbox[0] + goblin.hitbox[2]) and goblin.health >= 0:
                 pygame.mixer.Sound.play(hitSound)
                 goblin.hit()
                 score += 1
@@ -222,7 +226,7 @@ while run:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_SPACE] and shootLoop == 0:
-        # pygame.mixer.Sound.play(bulletSound)
+        pygame.mixer.Sound.play(bulletSound)
         if hero.left:
             facing = -1
         elif hero.right:
