@@ -31,10 +31,12 @@ char = pygame.image.load('images/standing.png')
 clock = pygame.time.Clock()
 score = 0
 
-# bulletSound = pygame.mixer.Sound("bullet.wav")
-# hitSound = pygame.mixer.Sound("hit.wav")
-# music = pygame.mixer.music.load("music.mp3")
-# pygame.mixer.music.play(-1)
+bulletSound = pygame.mixer.Sound("bullet.wav")
+hitSound = pygame.mixer.Sound("hit.wav")
+disappearSound = pygame.mixer.Sound("disappear.wav")
+music = pygame.mixer.music.load("music.mp3")
+pygame.mixer.music.play(-1)
+
 
 class Player(object):
     def __init__(self, x, y, width, height):
@@ -89,6 +91,7 @@ class Player(object):
                     i = 301
                     pygame.quit
 
+
 class Projectile(object):
     def __init__(self, x, y, radius, color, facing):
         self.x = x
@@ -100,6 +103,7 @@ class Projectile(object):
 
     def draw(self, win):
         pygame.draw.circle(win, self.color, (self.x, self.y), self.radius)
+
 
 class Enemy(object):
     walkRight = []
@@ -164,9 +168,10 @@ class Enemy(object):
         else:
             self.visible = False
 
+
 def redrawGameWindow():
 
-    win.blit(bg, (0,0))
+    win.blit(bg, (0, 0))
     text = font.render('Score: ' + str(score), 1, BLACK)
     win.blit(text, (370, 10)) 
     hero.draw(win)
@@ -174,6 +179,7 @@ def redrawGameWindow():
     for bullet in bullets:
         bullet.draw(win)    
     pygame.display.update()
+
 
 # mainloop
 font = pygame.font.SysFont('comicsans', 30, True, True)
@@ -185,7 +191,7 @@ run = True
 while run:
     clock.tick(FPS)
 
-    if goblin.visible == True:
+    if goblin.visible:
         if hero.hitbox[1] < goblin.hitbox[1] + goblin.hitbox[3] and hero.hitbox[1] + hero.hitbox[3] > goblin.hitbox[1]:
             if hero.hitbox[0] + hero.hitbox[2] > goblin.hitbox[0] and hero.hitbox[0] < goblin.hitbox[0] + goblin.hitbox[2]:
                 hero.hit()
@@ -198,34 +204,33 @@ while run:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run  = False
+            run = False
     
     for bullet in bullets: # bullet movement
         if bullet.y - bullet.radius < goblin.hitbox[1] + goblin.hitbox[3] and bullet.y + bullet.radius > goblin.hitbox[1]:
             if bullet.x + bullet.radius > goblin.hitbox[0] and bullet.x - bullet.radius < goblin.hitbox[0] + goblin.hitbox[2]:
-                # hitSound.play()
+                pygame.mixer.Sound.play(hitSound)
                 goblin.hit()
                 score += 1
                 bullets.pop(bullets.index(bullet))
 
-
         if bullet.x < 500 and bullet.x > 0:
             bullet.x += bullet.vel  # vel is directional +/-
         else:
-            bullets.pop(bullets.index(bullet)) # delete the edge bullet by index into the bullets list
+            bullets.pop(bullets.index(bullet))  # delete the edge bullet by index into the bullets list
     
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_SPACE] and shootLoop == 0:
-        # bulletSound.play()
+        pygame.mixer.Sound.play(bulletSound)
         if hero.left:
             facing = -1
         elif hero.right:
             facing = 1
 
         if len(bullets) < 5:
-            bullets.append(Projectile(round(hero.x + hero.width // 2), 
-            round(hero.y + hero.height//2), 6, BLACK, facing))
+            bullets.append(Projectile(round(hero.x + hero.width // 2),
+                                      round(hero.y + hero.height//2), 6, BLACK, facing))
 
         shootLoop = 1
 
@@ -262,6 +267,5 @@ while run:
             hero.jumpCount = 10
         
     redrawGameWindow()
-
 
 pygame.quit()
