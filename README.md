@@ -1,2 +1,2 @@
 # pygame_basics
-Getting into pygame
+Getting into pygame, a little RPG game
