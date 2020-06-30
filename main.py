@@ -31,7 +31,7 @@ char = pygame.image.load('images/standing.png')
 clock = pygame.time.Clock()
 score = 0
 
-bulletSound = pygame.mixer.Sound("bullet.wav")
+# bulletSound = pygame.mixer.Sound("bullet.wav")
 hitSound = pygame.mixer.Sound("hit.wav")
 disappearSound = pygame.mixer.Sound("disappear.wav")
 music = pygame.mixer.music.load("music.mp3")
@@ -222,7 +222,7 @@ while run:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_SPACE] and shootLoop == 0:
-        pygame.mixer.Sound.play(bulletSound)
+        # pygame.mixer.Sound.play(bulletSound)
         if hero.left:
             facing = -1
         elif hero.right:
